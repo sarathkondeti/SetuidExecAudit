@@ -1,0 +1,44 @@
+# CSE 509 Auditing tool for setuid & capable aware executables
+
+## Linux utilities have been slowing upgrading to capabilities instead of enabling setuid bit which is much more vulnerable.
+
+### Usage:
+   chmod +x findpriv.py
+   ./findpriv.py
+or
+   python3 findpriv.py
+
+### Example: on x86_64 machine
+    ./findpriv.py -p /usr/bin -s -c
+
+    Scanned  853  files, found  853  executables
+    setuid executables:  17
+    /usr/bin/crontab
+    /usr/bin/gpasswd
+    /usr/bin/sg
+    /usr/bin/wall
+    /usr/bin/chage
+    /usr/bin/umount
+    /usr/bin/su
+    /usr/bin/chfn
+    /usr/bin/sudo
+    /usr/bin/newgrp
+    /usr/bin/pkexec
+    /usr/bin/ssh-agent
+    /usr/bin/passwd
+    /usr/bin/chsh
+    /usr/bin/mount
+    /usr/bin/expiry
+    /usr/bin/sudoedit
+    capability-aware executables:  3
+    /usr/bin/fping cap_net_raw
+    /usr/bin/dumpcap cap_net_admin,cap_net_raw
+    /usr/bin/ping cap_net_raw
+
+
+### Implementation:
+    1. Argparse module used for argument parsing
+    2. os.walk() used for exploring the directory tree.
+    3. os.stat() used for fetching the permission flags.
+    4. Various stat module flags used for checking if the file is executable/setuid enabled/setgid enabled, etc.
+    5. Subprocess & getcap used to check if the executable is capability-aware.
